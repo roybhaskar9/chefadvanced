@@ -31,3 +31,29 @@ unless node['platform'] == "ubuntu"
 end
 
 -------------------------
+
+Case statements can be used as well.
+
+    @@@ ruby
+    case node['platform']
+    when "debian", "ubuntu"
+      package "apache2"
+    when "centos", "redhat"
+      package "httpd"
+    end
+    
+# Methods
+
+Ruby methods are called on an object with the dot-notation.
+
+    @@@ ruby
+    "I like Chef".gsub(/like/, "love") # => "I love Chef"
+    FileTest.exists?("/etc/passwd")    # => true
+    1.even?                            # => false
+    2.even?                            # => true
+
+Ruby has a special method available called `method_missing`. It is
+called when a method is not found for the object. Most of the DSLs in
+Chef are written using `method_missing`.
+
+.notes We will see the actual DSLs in their relevant sections.
