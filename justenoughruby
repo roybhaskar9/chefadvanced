@@ -1,0 +1,33 @@
+#!/usr/bin/ruby -w
+
+puts "Hello, Ruby!";
+
+#run it using ruby hello.rb
+
+
+-------------------------
+
+my_number = 3
+floating_point = 3.14159
+a_string = "I like Chef!"
+
+-------------------------
+
+code_sub = "code substitution"
+"This is a string with #{code_sub}"
+
+--------------------------
+
+Ruby Arrays
+[ "apache", "mysql", "php" ]
+
+---------------------------
+if node['platform'] == "ubuntu"
+  # do ubuntu things
+end
+
+unless node['platform'] == "ubuntu"
+  # don't do ubuntu things
+end
+
+-------------------------
