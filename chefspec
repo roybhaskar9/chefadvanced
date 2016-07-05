@@ -44,3 +44,7 @@ describe 'directorytest' do
     expect(chef_run).to create_file('/tmp/identity_attribute')
   end
 end
+-----------------
+Then from directorytest cookbook root folder
+-----------------
+chef exec rspec spec/default_spec.rb
