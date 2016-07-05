@@ -1,0 +1,57 @@
+Install Community Cookbook
+-----------------------------------------
+knife cookbook site install iptables
+sudo apt-get install git
+git init
+echo hi > testgit
+git add -A
+git commit -m "comment"
+knife cookbook site install iptables
+
+Simple Tests
+-------------
+knife cookbook test <cookbook_name>
+
+Rubocop
+------------
+Rubocop is a code style checking tool
+The way to run it is from chef-repo folder
+rubocop /path/to/cookbook
+rubocop cookbooks/motd
+
+FoodCritic - Checking Chef CookBook
+----------------
+vim cookbooks/my-cookbook/
+vim cookbooks/my-cookbook/recipes/default.rb
+-----------
+file "tmp/local_mode.txt" do
+  content "created by chef client local mode"
+end
+include_recipe "apt"
+
+-----------
+Here you have defined two inclusions
+-----------
+foodcritic cookbooks/my-cookbook/
+-----------
+FC007: Ensure recipe dependencies are reflected in cookbook metadata: cookbooks/my-cookbook/recipes/default.rb:9
+------------
+vim cookbooks/my-cookbook/metadata.rb
+------------
+....
+depends 'apt'
+------------
+foodcritic cookbooks/my-cookbook/
+------------
+Now there will be no more dependency warning
+------------
+
+BerkShelf
+-----------
+cd cookbooks/my-cookbook/
+berks install
+berks vendor ~/local_mode_exec/cookbooks
+berks upload
+cd ~/local_mode_exec/cookbooks
+chef-client -z -o my-cookbook
+
