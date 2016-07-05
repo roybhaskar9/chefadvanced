@@ -1,0 +1,25 @@
+The relevant custom resource code is in resources/motd.rb in the motd cookbook
+
+resource_name :motd
+property :message, kind_of: String, name_property: true
+
+action :create do
+  file '/etc/motd' do
+    content "#{message}\n"
+    mode '0644'
+  end
+end
+action :delete do
+  file '/etc/motd' do
+    content ""
+    mode '0644'
+  end
+end
+
+Way to call in recipes/default.rb
+---------------
+
+motd 'Welcome to my message of the day' do
+  action :create
+  #action :delete
+end
