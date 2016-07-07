@@ -1,0 +1,156 @@
+1. Install docker through docker repo
+--------------------------------------
+sudo tee /etc/yum.repos.d/docker.repo <<-'EOF'
+[dockerrepo]
+name=Docker Repository
+baseurl=https://yum.dockerproject.org/repo/main/centos/7/
+enabled=1
+gpgcheck=1
+gpgkey=https://yum.dockerproject.org/gpg
+EOF
+
+sudo yum install docker-engine
+
+sudo service docker start
+
+2. Become root
+---------------
+sudo su
+
+3. Install docker provisioning
+-------------------------------
+chef gem install chef-provisioning-docker
+
+3. Create a provision.rb
+-------------------------
+require 'chef/provisioning'
+machine 'apache' do
+  machine_options :docker_options => {
+      :base_image => {
+          :name => 'ubuntu',
+          :repository => 'ubuntu',
+          :tag => '14.04'
+      }
+  }
+end
+
+4. Run the file
+----------------
+export CHEF_DRIVER=docker
+chef-client -z provision.rb
+
+=============================================
+
+TestKitchen
+
+-----------------
+7  chef gem install kitchen-docker 
+    8  chef generate cookbook cookbooks/lynx
+    9  cd cookbooks/lynx
+   10  nano recipes/default.rb
+   11  ls
+   12  ls -a
+   13  nano Gemfile
+   14  bundle install
+   15  chef bundle install
+   16  chef exec bundle install
+   17  ls -a
+   18  nano .kitchen.yml 
+   19  nano test/integration/default/bats/verify_installed.bats
+   20  nano test/integration/default/bats
+   21  nano test/integration/default/serverspec/default_spec.rb 
+   22  clear
+   23  nano recipes/default.rb 
+   24  nano test/integration/default/serverspec/default_spec.rb 
+   25  nano recipes/default.rb 
+   26  kitchen verify
+   27  sudo apt-get install vagrant virtualbox
+   28  sudo yum install vagrant virtualbox
+   29  cd etc/yum.repos.d/
+   30  wget http://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
+   31  yum update -y
+   32  yum install binutils qt gcc make patch libgomp glibc-headers glibc-devel kernel-headers kernel-devel dkms
+   33  yum install virtualbox-5.0
+   34  yum update -y
+   35  cd /etc/yum.repos.d/
+   36  wget http://download.virtualbox.org/virtualbox/rpm/fedora/virtualbox.repo
+   37  yum install virtualbox-5.0
+   38  ls
+   39  rm -f virtualbox.repo 
+   40  wget http://download.virtualbox.org/virtualbox/rpm/rhel/virtualbox.repo
+   41  yum install virtualbox-5.0
+   42  yum install Virtualbox-5.0
+   43  yum install VirtualBox-5.0
+   44  wget https://releases.hashicorp.com/vagrant/1.8.4/vagrant_1.8.4_x86_64.rpm
+   45  yum localinstall vagrant_1.8.4_x86_64.rpm 
+   46  cd /home/chefuser/chef-repo/cookbooks/lynx
+   47  kitchen verify
+   
+   ---------------------
+   Recipe
+   ----------
+   package git
+   service 'git-daemon' do
+     action :start
+   end
+   
+------------------
+TestKitchen
+-------------
+require 'spec_helper'
+describe 'git::default' do
+  # Serverspec examples can be found at
+  # http://serverspec.org/resource_types.html
+  #it 'does something' do
+  #  skip 'Replace this with meaningful tests'
+  #end
+  require 'serverspec'
+# Required by serverspec
+set :backend, :exec
+  describe "Git Daemon" do
+    it "is listening on port 9418" do
+      expect(port(9418)).to be_listening
+    end
+    it "has a running service of git-daemon" do
+      expect(service("git-daemon")).to be_running
+    end
+  end
+end
+
+======================
+Vault
+--------
+http://clogeny.com/2015/09/24/chef-vault/
+http://hedge-ops.com/chef-vault-tutorial/
+
+Create Vault
+-------------
+knife vault create secrets2 database2 '{"username": "root", "password": "mypasswo
+rd"}' -S "role:dbserver" -A "abhradipm2,node1" -M client
+
+Show Vault
+-------------
+knife vault show secrets2 database2
+
+Update Vault
+------------
+knife vault update secrets2 database2 '{"username": "root", "password": "mypasswo
+rd"}' -S "role:dbserver" -A "abhradipm2,node1" -M client
+
+Recipe
+-------
+
+chef_gem 'chef-vault' do
+ 
+compile_time false
+end
+ 
+require 'chef-vault'
+item = ChefVault::Item.load("secrets", "database")
+ 
+item["password"]
+
+
+Chef Handler
+---------------
+https://christinemdraper.wordpress.com/2014/09/01/getting-started-with-chef-report-and-exception-handlers/
