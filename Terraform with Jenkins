@@ -1,0 +1,24 @@
+Terraform Output.tf
+--------------------
+output "ip" {
+    value = "${aws_eip.ip.public_ip}"
+}
+
+Get IP From Terraform Output
+-------------------------------
+OUTPUT="$(terraform output ip)"
+sudo sed -i "2i${OUTPUT}  tomcatserver" /etc/hosts
+
+
+Automated Download of Latest Build of Particular Version from Nexus
+---------------------------------------------------------------------
+wget -O deploymentcandidate.war "http://jenkins:8081/nexus/service/local/artifact/maven/content?r=snapshots&g=org.javaee7.
+sample&a=javaee7-simple-sample&v=1.11-SNAPSHOT&e=war"
+
+Tomcat Remote Deployment Script
+-----------------------------------
+1. First Undeploy Existing
+curl "http://admin:admin@tomcatserver:8080/manager/text/undeploy?path=/myappfromtext&update=true"
+2. Then Deploy
+curl -T "deploymentcandidate.war" "http://admin:admin@54.85.163.7:8080/manager/text/deploy?path=/myappfromtext&update=true"
+
